@@ -24,18 +24,23 @@ Item {
             hoverEnabled: true
 
             onEntered: {
-                testrect.y = testrect.y - 5
+                testrect.y = testrect.y - 3
 
             }
 
             onExited: {
-                testrect.y = testrect.y + 5;
+                testrect.y = testrect.y + 3;
             }
         }
 
+        //添加动画（当y属性发生变化的时候，调用这个动画）
         Behavior on y {
+            //专门用来给数值属性（比如x，y，width，height，opacity等）做平滑过渡
             NumberAnimation {
-                duration: 200; easing.type: Easing.InOutQuad
+                //动画时长
+                duration: 400;
+                //easing是缓动曲线控制器，决定动画的手感，InOutQuad表示过程是：慢->快->慢
+                easing.type: Easing.InOutQuad
             }
         }
     }
@@ -52,7 +57,10 @@ Item {
         visible: mouseArea.containsMouse        //只有hover的时候才会显示
 
         Behavior on visible {
-            NumberAnimation { duration: 200; easing.type: Easing.InOutQuad }
+            NumberAnimation {
+                duration: 200;
+                easing.type: Easing.InOutQuad
+            }
         }
     }
 }

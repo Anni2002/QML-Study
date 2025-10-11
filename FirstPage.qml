@@ -1,7 +1,8 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
+import QtQuick 6.5
+import QtQuick.Controls 6.5
 import QtQuick.Layouts 1.15     //布局模块
 import QtQuick.Effects
+import Qt5Compat.GraphicalEffects
 
 
 // Text {
@@ -160,45 +161,30 @@ Item {
                             anchors.fill: bodyZip
                         }
 
-                        property int normalY: y
-                        property int hoverY: normalY - 20
-
-                        // 阴影（使用 MultiEffect）
-                        MultiEffect {
-                            id: shadowEffect
-                            anchors.fill: bodyZip
-                            source: bodyZip
-                            shadowEnabled: true
-                            shadowColor: "lightblue"
-                            shadowBlur: 0.5     // 模糊程度 (0~1)
-                            shadowHorizontalOffset: 0
-                            shadowVerticalOffset: 8
-                            opacity: 0.0
-                            Behavior on opacity {
-                                NumberAnimation { duration: 200 }
-                            }
-                        }
-
                         MouseArea {
+                            id: mouseArea
                             anchors.fill: parent
                             hoverEnabled: true
-                            onHoveredChanged: {
-                                if(hovered)
-                                {
-                                    bodyZip.y = bodyZip.hoverY
-                                    shadowEffect.opacity = 0.8
-                                }else
-                                {
-                                    bodyZip.y = bodyZip.normalY
-                                    shadowEffect.opacity = 0.0
-                                }
+
+                            onEntered: {
+                                bodyZip.y = bodyZip.y - 3
                             }
+
+                            onExited: {
+                                bodyZip.y = bodyZip.y + 3;
+                            }
+
                         }
 
+
+                        //添加动画（当y属性发生变化的时候，调用这个动画）
                         Behavior on y {
+                            //专门用来给数值属性（比如x，y，width，height，opacity等）做平滑过渡
                             NumberAnimation {
-                                duration: 200;
-                                easing.type: Easing.OutQuad
+                                //动画时长
+                                duration: 100;
+                                //easing是缓动曲线控制器，决定动画的手感，InOutQuad表示过程是：慢->快->慢
+                                easing.type: Easing.InOutQuad
                             }
                         }
 
@@ -215,6 +201,26 @@ Item {
                             id: bodyUnzipBtPic
                             source: "/images/unzipbt.png"
                             anchors.fill: parent
+                        }
+                    }
+                }
+
+
+                DropShadow {
+                    anchors.fill: bodyZip                  // 阴影跟随矩形大小
+                    source: bodyZip                        // 阴影来源对象
+                    color: "#50000000"                      // 阴影颜色（半透明黑）
+                    horizontalOffset: 0                     // X 偏移
+                    verticalOffset: 5                       // Y 偏移
+                    radius: 10                              // 模糊半径
+                    samples: 16                             // 阴影采样数量，值越高越平滑
+                    transparentBorder: true                 // 阴影透明边界
+                    visible: mouseArea.containsMouse        //只有hover的时候才会显示
+
+                    Behavior on visible {
+                        NumberAnimation {
+                            duration: 200;
+                            easing.type: Easing.InOutQuad
                         }
                     }
                 }
@@ -278,6 +284,8 @@ Item {
                 }
             }
         }
+
+
     }
 }
 

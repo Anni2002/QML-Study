@@ -11,11 +11,13 @@ ApplicationWindow {
     minimumHeight: 600
     visible: true
     // title: qsTr("Hello World")
+    flags: Qt.FramelessWindowHint   //去掉标题栏和边框
+    color: "transparent"
 
     StackView{
         id: stack
         anchors.fill: parent //fil the entire window
         //initialItem: specifies the first page to display
-        initialItem: MyDropShadow {} //文件名第一个字母最好大写，否则可能报错
+        initialItem: TestDemo {} //文件名第一个字母最好大写，否则可能报错
     }
 }
