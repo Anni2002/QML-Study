@@ -3,8 +3,10 @@ import QtQuick.Controls 2.15    //
 import QtQuick.Layouts 1.15     //布局模块
 import QtQuick.Controls.Material
 import QtQuick.Effects
+import Qt.labs.folderlistmodel 2.1
 
 Item {
+    // id: root
 
     Theme {
         id:theme
@@ -14,7 +16,7 @@ Item {
         anchors.fill: parent
         acceptedButtons: Qt.LeftButton
         onClicked: {
-            Qt.inputMethod.hide()   //关闭软键盘
+            // Qt.inputMethod.hide()   //关闭软键盘
             focus = false
         }
     }
@@ -59,6 +61,14 @@ Item {
         topLeftRadius: 20
         bottomLeftRadius: 20
         clip: true
+
+        Rectangle {
+            anchors.top: parent.top
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            width: 1
+            color: "#454545"
+        }
 
         Label {
             id: logo
@@ -312,17 +322,121 @@ Item {
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
                 height: 1
-                color: "#a2a2a2"
+                color: "#454545"
             }
         }
 
         Rectangle {
+            id: bodyBottom
+            x: bodyTop.x
+            y: bodyTop.height
+            width: parent.width
+            height: parent.height - bodyTop.height
+            color: "transparent"
 
             Rectangle {
+                id: bodyLeft
+                x: 0
+                y: 0
+                width: 740
+                height: parent.height
+                color: "transparent"
+
+                Rectangle {
+                    id: leftTop
+                    x: 0
+                    y: 0
+                    width: parent.width
+                    height: bodyTop.height
+                    color: "transparent"
+                    // color: "red"
+
+                    Rectangle {
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.bottom: parent.bottom
+                        height: 1
+                        color: "#454545"
+                    }
+
+                }
+
+                Rectangle {
+                    id: bodyList
+                    x: leftTop.x
+                    y: leftTop.height
+                    width: parent.width
+                    height: parent.height - leftTop.height
+                    color: "transparent"
+
+                    FolderListModel {
+                        id: folderModel
+                        folder: "D:/Work"
+
+                        showDirs: true
+                        showFiles: true
+                        nameFilters: ["*.mp3"]      //过滤文件类型
+                    }
+
+                    ListView {
+                        id: fileList
+                        anchors.fill: parent
+                        model: folderModel
+                        clip: true
+
+                        delegate: Rectangle{
+                            width: parent.width
+                            height: 40
+                            color: "transparent"
+
+                            Rectangle {
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                anchors.bottom: parent.bottom
+                                height: 1
+                                color: "#454545"
+                            }
+
+                            Row {
+                                anchors.verticalCenter: parent.verticalCenter
+                                spacing: 10
+                                Text {
+                                    id: fileName
+                                    elide: Text.ElideRight
+                                    width: parent.width - 80
+                                }
+
+                                Text {
+                                    text: isFolder ? "[文件夹]" : ""
+                                    color: "#888888"
+                                }
+                            }
+                        }
+                    }
+
+
+                }
+
+                Rectangle {
+                    anchors.right: parent.right
+                    anchors.top: parent.top
+                    anchors.bottom: parent.bottom
+                    width: 1
+                    color: "#454545"
+                }
 
 
             }
 
+            Rectangle {
+                id: bodyRight
+                x: bodyLeft.width
+                y: 0
+                width: parent.width - bodyLeft.width
+                height: parent.height
+                color: "transparent"
+
+            }
         }
 
 
