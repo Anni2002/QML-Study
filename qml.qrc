@@ -6,12 +6,9 @@
         <file>images/testlogo.png</file>
         <file>images/closebt_h.png</file>
         <file>images/closebt_n.png</file>
-        <file>images/datalogo.png</file>
-        <file>images/homelogo.png</file>
-        <file>images/loglogo.png</file>
-        <file>images/readerlogo.png</file>
-        <file>images/sectorlogo.png</file>
-        <file>images/settinglogo.png</file>
-        <file>images/userlogo.png</file>
+        <file>images/head_h.png</file>
+        <file>images/head_n.png</file>
+        <file>images/store.png</file>
+        <file>images/toplogo.png</file>
     </qresource>
 </RCC>

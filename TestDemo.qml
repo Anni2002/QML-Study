@@ -5,7 +5,19 @@ import QtQuick.Controls.Material
 import QtQuick.Effects
 
 Item {
-    // id: root
+
+    Theme {
+        id:theme
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        acceptedButtons: Qt.LeftButton
+        onClicked: {
+            Qt.inputMethod.hide()   //关闭软键盘
+            focus = false
+        }
+    }
 
     Item {
         id: titleMove
@@ -40,22 +52,20 @@ Item {
         y: 0
         width: 60
         height: parent.height
-        color: "#999999"
+        color: "#262626"
 
         //设置圆角
         radius: 0
         topLeftRadius: 20
-        topRightRadius: 0
         bottomLeftRadius: 20
-        bottomRightRadius: 0
         clip: true
 
         Label {
             id: logo
             width: 30
             height: 30
-            x: (systemWindow.width - logo.width) / 2
-            y: logo.x
+            anchors.horizontalCenter: parent.horizontalCenter
+            y: 10
 
             background: Image {
                 id: logoimg
@@ -73,7 +83,6 @@ Item {
 
         Rectangle {
             id: homePage
-            // x: logo.x
             anchors.horizontalCenter: parent.horizontalCenter
             y: logo.y + logo.height * 2
             width: 35
@@ -116,18 +125,17 @@ Item {
                 anchors.fill: parent
                 hoverEnabled: true
 
-                // onEntered: parent.color = "#DD999999"
-                // onExited: parent.color = "transparent"
-
-                onEntered: blurEffect.blur = 30
-                onExited: blurEffect.blur = 0
+                onEntered: parent.color = "#DD999999"
+                onExited: parent.color = "transparent"
 
             }
-
-
         }
 
-
+        Rectangle {
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+        }
 
     }
 
@@ -137,48 +145,184 @@ Item {
         height: parent.height
         x: systemWindow.width
         y: 0
-        color: "white"
+        // color: "white"
+        color: "#212121"
 
         radius: 0
-        topLeftRadius: 0
         topRightRadius: 20
-        bottomLeftRadius: 0
         bottomRightRadius: 20
 
-        Button {
-            id: closeBt
-            width: 16
-            height: 16
-            x: parent.width - 20 - closeBt.width
-            y: 15
-            background: null                            //去掉默认背景
 
-            // //不要用image和background，有锯齿，需要用contentItem才不会有锯齿
-            // background : Image {
-            //     id: closeImg
-            //     anchors.fill: parent
-            //     source: "/images/closebt.png"
-            //     fillMode: Image.PreserveAspectFit
+        Rectangle {
+            id: bodyTop
+            x: 0
+            y: 0
+            width: root.width - systemWindow.width
+            height: 50
+            // color: "black"
+            color: "#212121"
 
-            //     smooth: true
-            //     antialiasing: true
-            // }
+            topRightRadius: 20
 
-            contentItem: Image {
+            RowLayout {
+                id: topLayout
                 anchors.fill: parent
-                source: closeBt.hovered ? "/images/closebt_h.png" : "/images/closebt_n.png"
-                fillMode: Image.PreserveAspectFit       //保持比例缩放
-                smooth: true                            //开启双线性平滑
-                antialiasing: true                      //开启抗锯齿渲染
+                anchors.margins: 10
+                spacing: 10
 
-                //放大采样，提高放大后清晰度
-                sourceSize.width: width * 2
-                sourceSize.height: height * 2
+                Label {
+                    Layout.preferredWidth: 30
+                    Layout.preferredHeight: 30
+                    Layout.alignment: Qt.AlignVCenter
+
+                    background: Image {
+                        source: "/images/toplogo.png"
+                        anchors.fill: parent
+                    }
+                }
+
+                Label {
+                    text: "Folders"
+                    font.pixelSize: 15
+                    // color: "#515151"
+                    color: "white"
+                    Layout.alignment: Qt.AlignCenter
+
+                }
+
+                Item {
+                    Layout.fillWidth: true
+                }
+
+                Rectangle {
+                    id: topSearch
+                    width: 180
+                    height: 30
+                    // anchors.verticalCenter: parent.verticalCenter   //垂直居中
+                    Layout.alignment: Qt.AlignVCenter
+                    radius: 4
+
+
+                    RowLayout {
+                        anchors.fill: parent
+                        anchors.margins: 5
+                        spacing: 5
+
+                        // Label {
+                        //     id: topsearchLogo
+                        //     width: 10
+                        //     height: 10
+                        //     background: Image {
+                        //         id: searchlogoimg
+                        //         source: "/images/searchlogo.png"
+                        //         anchors.fill: parent
+                        //     }
+                        // }
+
+                        Image {
+                            id: topsearchLogo
+                            source: "/images/searchlogo.png"
+                            Layout.preferredWidth: 15
+                            Layout.preferredHeight: 15
+                            anchors.verticalCenter: parent.verticalCenter
+                            smooth: true
+                        }
+
+                        TextField {
+                            id: topField
+                            // placeholderText: "Search"
+                            text: "Search"
+                            color: "black"
+                            background: null
+                            // anchors.verticalCenter: parent.verticalCenter
+                            width: parent.width - topsearchLogo.width - 15
+                            Layout.alignment: Qt.AlignVCenter
+
+                            onActiveFocusChanged: {
+                                if(activeFocus && text === "Search")
+                                {
+                                    text = "";
+                                }else if(!activeFocus && text === "")
+                                {
+                                    text = "Search";
+                                }
+                            }
+
+                        }
+                    }
+                }
+
+                Button {
+                    id: userHead
+                    Layout.preferredHeight: 16
+                    Layout.preferredWidth: 16
+                    background: null
+
+                    contentItem: Image{
+                        anchors.fill: parent
+                        source: userHead.hovered ? "/images/head_h.png" : "/images/head_n.png"
+                        fillMode: Image.PreserveAspectFit
+                        smooth: true
+                        antialiasing: true
+
+                        sourceSize.width: width * 2
+                        sourceSize.height: height * 2
+                    }
+                }
+
+                Button {
+                    id: closeBt
+                    Layout.preferredWidth: 20
+                    Layout.preferredHeight: 20
+                    background: null                            //去掉默认背景
+
+                    // //不要用image和background，有锯齿，需要用contentItem才不会有锯齿
+                    // background : Image {
+                    //     id: closeImg
+                    //     anchors.fill: parent
+                    //     source: "/images/closebt.png"
+                    //     fillMode: Image.PreserveAspectFit
+
+                    //     smooth: true
+                    //     antialiasing: true
+                    // }
+
+                    contentItem: Image {
+                        anchors.fill: parent
+                        source: closeBt.hovered ? "/images/closebt_h.png" : "/images/closebt_n.png"
+                        fillMode: Image.PreserveAspectFit       //保持比例缩放
+                        smooth: true                            //开启双线性平滑
+                        antialiasing: true                      //开启抗锯齿渲染
+
+                        //放大采样，提高放大后清晰度
+                        sourceSize.width: width * 2
+                        sourceSize.height: height * 2
+                    }
+
+                    onClicked: {
+                        Qt.quit();
+                    }
+                }
+
+
             }
 
-            onClicked: {
-                close();
+            Rectangle {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                height: 1
+                color: "#a2a2a2"
             }
+        }
+
+        Rectangle {
+
+            Rectangle {
+
+
+            }
+
         }
 
 
