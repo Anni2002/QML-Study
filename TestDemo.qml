@@ -1,9 +1,10 @@
 import QtQuick 6.8              //基础可视元素、布局容器和事件响应
-import QtQuick.Controls 2.15    //
-import QtQuick.Layouts 1.15     //布局模块
+import QtQuick.Controls 6.8    //
+import QtQuick.Layouts 6.8     //布局模块
 import QtQuick.Controls.Material
 import QtQuick.Effects
 import Qt.labs.folderlistmodel 2.1
+
 
 Item {
     // id: root
@@ -19,6 +20,14 @@ Item {
             // Qt.inputMethod.hide()   //关闭软键盘
             focus = false
         }
+    }
+
+    // 辅助函数：将字节数转换为可读格式
+    function humanReadableSize(bytes) {
+        if (bytes < 1024) return bytes + " B"
+        else if (bytes < 1024*1024) return (bytes/1024).toFixed(1) + " KB"
+        else if (bytes < 1024*1024*1024) return (bytes/1024/1024).toFixed(1) + " MB"
+        else return (bytes/1024/1024/1024).toFixed(1) + " GB"
     }
 
     Item {
@@ -234,7 +243,7 @@ Item {
                             source: "/images/searchlogo.png"
                             Layout.preferredWidth: 15
                             Layout.preferredHeight: 15
-                            anchors.verticalCenter: parent.verticalCenter
+                            Layout.alignment: Qt.AlignCenter
                             smooth: true
                         }
 
@@ -275,8 +284,8 @@ Item {
                         smooth: true
                         antialiasing: true
 
-                        sourceSize.width: width * 2
-                        sourceSize.height: height * 2
+                        // sourceSize.width: width * 2
+                        // sourceSize.height: height * 2
                     }
                 }
 
@@ -305,8 +314,8 @@ Item {
                         antialiasing: true                      //开启抗锯齿渲染
 
                         //放大采样，提高放大后清晰度
-                        sourceSize.width: width * 2
-                        sourceSize.height: height * 2
+                        // sourceSize.width: width * 2
+                        // sourceSize.height: height * 2
                     }
 
                     onClicked: {
@@ -325,6 +334,7 @@ Item {
                 color: "#454545"
             }
         }
+
 
         Rectangle {
             id: bodyBottom
@@ -371,12 +381,19 @@ Item {
 
                     FolderListModel {
                         id: folderModel
-                        folder: "D:/Work"
+                        // folder: "file:///D:/Work"
+                        folder: "file:///D:/code"
 
-                        showDirs: true
-                        showFiles: true
-                        nameFilters: ["*.mp3"]      //过滤文件类型
+                        showDirs: true          //显示文件夹
+                        showFiles: true         //显示文件
+                        showDotAndDotDot: true  //显示文件日期
+                        nameFilters: ["*"]      //过滤文件类型
+
+                        // folderFirst: true
+                        sortField: FolderListModel.Name
                     }
+
+
 
                     ListView {
                         id: fileList
@@ -385,7 +402,7 @@ Item {
                         clip: true
 
                         delegate: Rectangle{
-                            width: parent.width
+                            width: bodyList.width
                             height: 40
                             color: "transparent"
 
@@ -397,23 +414,97 @@ Item {
                                 color: "#454545"
                             }
 
-                            Row {
-                                anchors.verticalCenter: parent.verticalCenter
+                            RowLayout {
+                                id: listLayout
+                                anchors.fill: parent
+                                anchors.margins: 10
                                 spacing: 10
-                                Text {
-                                    id: fileName
-                                    elide: Text.ElideRight
-                                    width: parent.width - 80
+
+                                Image {
+                                    id: listImg
+                                    Layout.preferredHeight: 20
+                                    Layout.preferredWidth: 20
+                                    Layout.alignment: Qt.AlignVCenter
+                                    source: fileIsDir ? "/images/dirlogo.png" : "/images/filelogo.png"
+                                    smooth: true
+                                    // fillMode: Image.PreserveAspectFit
+                                    antialiasing: true
+
+                                    // sourceSize.width: width * 2
+                                    // sourceSize.height: height * 2
                                 }
 
                                 Text {
-                                    text: isFolder ? "[文件夹]" : ""
-                                    color: "#888888"
+                                    // id: fileName
+                                    text: model.fileName
+                                    color: "white"
+                                    elide: Text.ElideRight
+                                    // width: parent.width - 80
                                 }
+
+                                Rectangle {
+                                    Layout.fillWidth: true
+                                }
+
+                                Text {
+                                    // id: fileDate
+                                    // text: Qt.formatDateTime(fileModified,"yyyy-MM-dd HH:mm:ss")  //修改时间格式
+                                    text: Qt.formatDateTime(fileModified,"yyyy-MM-dd")
+                                    color: "white"
+                                    // elide: Text.ElideRight
+                                    horizontalAlignment: Text.AlignRight
+
+                                }
+
+                                Text {
+                                    text: fileIsDir ? "" : humanReadableSize(fileSize)
+                                    horizontalAlignment: Text.AlignRight
+                                    width: 100
+                                    color: "white"
+
+                                }
+
+                                Button {
+                                    Layout.preferredWidth: 20
+                                    Layout.preferredHeight: 20
+                                    Layout.alignment: Qt.AlignCenter
+                                    width: 20
+                                    height: 20
+                                    background: null
+
+                                    contentItem: Image {
+                                        source: "/images/listset.png"
+                                        anchors.fill: parent
+                                        smooth: true
+                                        antialiasing: true
+
+                                        // sourceSize.width: width * 2
+                                        // sourceSize.height: height * 2
+
+                                    }
+                                }
+                            }
+
+                            MouseArea {
+                                anchors.fill: parent
+                                hoverEnabled: true
+                                onClicked: ListView.currentIndex = index
+                                onDoubleClicked: {
+                                    if(fileIsDir)
+                                    {
+                                        folderModel.folder = fileUrl
+                                    }
+                                }
+
+
                             }
                         }
                     }
 
+                    Component.onCompleted: {
+                        console.log("当前路径:", folderModel.folder)
+                        console.log("文件数:", folderModel.count)
+                    }
 
                 }
 

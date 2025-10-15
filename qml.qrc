@@ -10,5 +10,10 @@
         <file>images/head_n.png</file>
         <file>images/store.png</file>
         <file>images/toplogo.png</file>
+        <file>images/homelogo.png</file>
+        <file>images/dirlogo.png</file>
+        <file>images/filelogo.png</file>
+        <file>images/listset.png</file>
+        <file>images/searchlogo.png</file>
     </qresource>
 </RCC>
