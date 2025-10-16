@@ -360,6 +360,11 @@ Item {
                     height: bodyTop.height
                     color: "transparent"
                     // color: "red"
+                    
+                    // TextField {
+                    //     id:
+                    // }
+                    
 
                     Rectangle {
                         anchors.left: parent.left

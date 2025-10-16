@@ -8,11 +8,12 @@ import Qt5Compat.GraphicalEffects
 
 
 
+
 //根对象
 ApplicationWindow {
     id: root
-    minimumWidth: 1000
-    minimumHeight: 600
+    minimumWidth: 1200
+    minimumHeight: 800
     visible: true
     // title: qsTr("Hello World")
     // flags: Qt.FramelessWindowHint   //去掉标题栏和边框(任务栏的图标篇也会消失)
@@ -23,12 +24,38 @@ ApplicationWindow {
         id: theme
     }
 
-    StackView{
-        id: stack
-        anchors.fill: parent //fil the entire window
-        //initialItem: specifies the first page to display
-        initialItem: TestDemo {} //文件名第一个字母最好大写，否则可能报错
+    Rectangle {
+        id: mask
+        anchors.fill: parent
+        radius: 35
+        visible: false
+
+
     }
+
+    Image {
+        id: background
+        source: "/images/01.jpg"
+        fillMode: Image.PreserveAspectFit
+        visible: false
+    }
+
+    OpacityMask {
+        anchors.fill: parent
+        source: background
+        maskSource: mask
+    }
+
+
+
+
+
+    // StackView{
+    //     id: stack
+    //     anchors.fill: parent //fil the entire window
+    //     //initialItem: specifies the first page to display
+    //     initialItem: TestDemo {} //文件名第一个字母最好大写，否则可能报错
+    // }
 
     // FolderListModel {
     //         id: folderModel
@@ -62,5 +89,44 @@ ApplicationWindow {
     //     }
 }
 
+
+// //定义圆角背景图
+// Window {
+//     width: 400
+//     height: 300
+//     visible: true
+//     title: "Qt5Compat.GraphicalEffects - 圆角图片"
+//     flags: Qt.FramelessWindowHint | Qt.Window   //去掉标题栏和边框（任务栏图标正常显示）
+//     color: "transparent"
+
+//     // 定义圆角蒙版
+//     Rectangle {
+//         id: mask
+//         width: 200
+//         height: 200
+//         radius: 20
+//         visible: false
+//     }
+
+//     // 原始图片
+//     Image {
+//         id: sourceImage
+//         width: 200
+//         height: 200
+//         anchors.centerIn: parent
+//         source: "/images/zipbt.png"
+//         fillMode: Image.PreserveAspectCrop
+//         visible: false
+//     }
+
+//     // 应用圆角蒙版
+//     OpacityMask {
+//         anchors.centerIn: parent
+//         width: 200
+//         height: 200
+//         source: sourceImage
+//         maskSource: mask
+//     }
+// }
 
 

@@ -15,5 +15,6 @@
         <file>images/filelogo.png</file>
         <file>images/listset.png</file>
         <file>images/searchlogo.png</file>
+        <file>images/01.jpg</file>
     </qresource>
 </RCC>
