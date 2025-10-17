@@ -16,5 +16,8 @@
         <file>images/listset.png</file>
         <file>images/searchlogo.png</file>
         <file>images/01.jpg</file>
+        <file>images/userhead.jpg</file>
+        <file>images/close.png</file>
+        <file>images/minbt.png</file>
     </qresource>
 </RCC>

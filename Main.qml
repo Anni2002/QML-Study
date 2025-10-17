@@ -25,12 +25,40 @@ ApplicationWindow {
     }
 
     Rectangle {
+        id: dragArea
+        width: parent.width
+        height: 40
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: parent.top
+        color: "transparent"
+
+        MouseArea {
+            anchors.fill: parent
+            property real startX
+            property real startY
+
+            onPressed: function(mouse) {
+                startX = mouse.x
+                startY = mouse.y
+            }
+
+            onPositionChanged: {
+                if(mouse.buttons === Qt.LeftButton)
+                {
+                    root.x += mouse.x - startX
+                    root.y += mouse.y - startY
+                }
+            }
+
+        }
+    }
+
+    Rectangle {
         id: mask
         anchors.fill: parent
         radius: 35
         visible: false
-
-
     }
 
     Image {
@@ -46,6 +74,135 @@ ApplicationWindow {
         maskSource: mask
     }
 
+    BlurCard {
+        id: sysrec
+        width: 46
+        height: 80
+        borderRadius: 15
+        x:parent.width - sysrec.width - 20
+        y: 20
+        layer.enabled: true
+        borderColor: "#e6e6e6"
+
+        ColumnLayout {
+            anchors.fill: parent
+            anchors.margins: 10
+            spacing: 10
+
+
+            Rectangle {
+                id: minrect
+                width: 26
+                height: 26
+                radius: 13
+                color: "#e6e6e6"
+
+                Image {
+                    id: minimg
+                    width: 20
+                    height: 20
+                    anchors.centerIn: parent
+                    smooth: true
+                    source: "/images/minbt.png"
+
+                    // transform: Rotation {
+                    //     id: rotation
+                    //     origin.x: minimg.width / 2          //旋转中心点x
+                    //     origin.y: minimg.height / 2         //旋转中心点y
+                    //     angle: 0                            //旋转角度（以度为单位），0表示不旋转
+                    // }
+
+                    // MouseArea {
+                    //     anchors.fill: parent
+                    //     hoverEnabled: true
+
+                    //     onEntered: {
+                    //         rotationAnim.from = rotation.angle
+                    //         rotationAnim.to = rotation.angle + 360
+
+                    //         rotationAnim.start()
+                    //     }
+                    // }
+
+                    // NumberAnimation {
+                    //     id: rotationAnim
+                    //     target: rotation
+                    //     property: "angle"
+                    //     duration: 300
+                    //     easing.type: Easing.InOutQuad
+                    // }
+                }
+            }
+
+            Rectangle {
+                id: closerect
+                width: 26
+                height: 26
+                radius: 13
+                color: "transparent"
+
+                Image {
+                    id: closeimg
+                    width: 20
+                    height: 20
+                    anchors.centerIn: parent
+                    smooth: true
+                    source: "/images/close.png"
+
+                    transform: Rotation {
+                        id: rotation
+                        origin.x: minimg.width / 2          //旋转中心点x
+                        origin.y: minimg.height / 2         //旋转中心点y
+                        angle: 0                            //旋转角度（以度为单位），0表示不旋转
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        hoverEnabled: true
+
+                        onEntered: {
+                            rotationAnim.from = rotation.angle
+                            rotationAnim.to = rotation.angle + 180
+                            parent.color = "white"
+                            rotationAnim.start()
+                        }
+
+                        onExited: {
+                            rotationAnim.from = rotation.angle
+                            rotationAnim.to = rotation.angle - 180
+                            parent.color = "transparent"
+                            rotationAnim.start();
+                        }
+                    }
+
+                    NumberAnimation {
+                        id: rotationAnim
+                        target: rotation
+                        property: "angle"
+                        duration: 400
+                        easing.type: Easing.InOutQuad
+                    }
+                }
+            }
+        }
+
+    }
+
+    BlurCard {
+        width: 240
+        height: parent.height
+        blurSource: background
+        borderRadius: 35
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.bottom: parent.bottom
+        layer.enabled: true
+    }
+
+
+    UserHead {
+
+    }
 
 
 

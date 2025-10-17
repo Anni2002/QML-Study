@@ -40,7 +40,7 @@ Item {
         MouseArea {
             anchors.fill: parent
             property real startX
-            property real stareY
+            property real startY
 
             onPressed: (mouse) => {
                 startX = mouse.x
@@ -51,7 +51,7 @@ Item {
                 if(mouse.buttons === Qt.LeftButton)
                 {
                     root.x += mouse.x - startX
-                    root.y += mouse.y - stareY
+                    root.y += mouse.y - startY
                 }
             }
         }
