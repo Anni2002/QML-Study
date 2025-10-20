@@ -74,6 +74,24 @@ ApplicationWindow {
         maskSource: mask
     }
 
+    SequentialAnimation {
+        id: minimizeAnim
+
+        ParallelAnimation {
+            // NumberAnimation { target: root; property: "scale"; to: 0.2; duration: 300; easing.type: Easing.InOutQuad }
+            NumberAnimation { target: root; property: "opacity"; to: 0.0; duration: 300; easing.type: Easing.InOutQuad }
+        }
+
+        ScriptAction { script: root.showMinimized() }   // 动画完成后执行最小化
+        ScriptAction {
+            // 动画结束后恢复属性，防止再次显示时错位
+            script: {
+                root.scale = 1.0
+                root.opacity = 1.0
+            }
+        }
+    }
+
     BlurCard {
         id: sysrec
         width: 46
@@ -91,50 +109,6 @@ ApplicationWindow {
 
 
             Rectangle {
-                id: minrect
-                width: 26
-                height: 26
-                radius: 13
-                color: "#e6e6e6"
-
-                Image {
-                    id: minimg
-                    width: 20
-                    height: 20
-                    anchors.centerIn: parent
-                    smooth: true
-                    source: "/images/minbt.png"
-
-                    // transform: Rotation {
-                    //     id: rotation
-                    //     origin.x: minimg.width / 2          //旋转中心点x
-                    //     origin.y: minimg.height / 2         //旋转中心点y
-                    //     angle: 0                            //旋转角度（以度为单位），0表示不旋转
-                    // }
-
-                    // MouseArea {
-                    //     anchors.fill: parent
-                    //     hoverEnabled: true
-
-                    //     onEntered: {
-                    //         rotationAnim.from = rotation.angle
-                    //         rotationAnim.to = rotation.angle + 360
-
-                    //         rotationAnim.start()
-                    //     }
-                    // }
-
-                    // NumberAnimation {
-                    //     id: rotationAnim
-                    //     target: rotation
-                    //     property: "angle"
-                    //     duration: 300
-                    //     easing.type: Easing.InOutQuad
-                    // }
-                }
-            }
-
-            Rectangle {
                 id: closerect
                 width: 26
                 height: 26
@@ -146,7 +120,9 @@ ApplicationWindow {
                     width: 20
                     height: 20
                     anchors.centerIn: parent
-                    smooth: true
+                    // fillMode: Image.PreserveAspectFit       //保持比例缩放
+                    smooth: true                            //开启双线性平滑
+                    antialiasing: true                      //开启抗锯齿渲染
                     source: "/images/close.png"
 
                     transform: Rotation {
@@ -163,15 +139,19 @@ ApplicationWindow {
                         onEntered: {
                             rotationAnim.from = rotation.angle
                             rotationAnim.to = rotation.angle + 180
-                            parent.color = "white"
+                            closerect.color = "white"
                             rotationAnim.start()
                         }
 
                         onExited: {
                             rotationAnim.from = rotation.angle
                             rotationAnim.to = rotation.angle - 180
-                            parent.color = "transparent"
-                            rotationAnim.start();
+                            closerect.color = "transparent"
+                            rotationAnim.start()
+                        }
+
+                        onClicked: {
+                            close()
                         }
                     }
 
@@ -184,11 +164,51 @@ ApplicationWindow {
                     }
                 }
             }
+
+            Rectangle {
+                id: minrect
+                width: 26
+                height: 26
+                radius: 13
+                color: "transparent"
+
+
+                Image {
+                    id: minimg
+                    width: 20
+                    height: 20
+                    anchors.centerIn: parent
+                    smooth: true
+                    source: "/images/minbt.png"
+
+
+
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    onEntered: {
+                        minrect.color = "white"
+                    }
+
+                    onExited: {
+                        minrect.color = "transparent"
+                    }
+
+                    onClicked: {
+                        // root.showMinimized()
+                        minimizeAnim.start()
+                    }
+                }
+
+            }
         }
 
     }
 
     BlurCard {
+        id: leftBlur
         width: 240
         height: parent.height
         blurSource: background
@@ -201,7 +221,30 @@ ApplicationWindow {
 
 
     UserHead {
+        id: userHead
+        anchors.top: parent.top
+        anchors.horizontalCenter: leftBlur.horizontalCenter
+        anchors.left: parent.left
+        anchors.topMargin: 40
+        anchors.leftMargin: userHead.width
+        headimg: "/images/userhead.jpg"
 
+        // Behavior on scale {
+        //     NumberAnimation {
+        //         duration: 200;
+        //         easing.type: Easing.InOutQuad
+        //     }
+        // }
+
+        MouseArea {
+            anchors.fill: parent
+
+            onPressed: {parent.scale = 0.95}
+
+            onReleased: {parent.scale = 1}
+
+            onCanceled: {parent.scale = 0.1}
+        }
     }
 
 
