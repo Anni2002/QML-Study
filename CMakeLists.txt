@@ -31,6 +31,8 @@ qt_add_qml_module(appQMLTest
         QML_FILES Theme.qml
         QML_FILES BlurCard.qml
         QML_FILES UserHead.qml
+        QML_FILES ButtonCard.qml
+        QML_FILES NewDate.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

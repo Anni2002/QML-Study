@@ -197,8 +197,8 @@ ApplicationWindow {
                     }
 
                     onClicked: {
-                        // root.showMinimized()
-                        minimizeAnim.start()
+                        root.showMinimized()
+                        // minimizeAnim.start()
                     }
                 }
 
@@ -245,6 +245,10 @@ ApplicationWindow {
 
             onCanceled: {parent.scale = 0.1}
         }
+    }
+
+    ButtonCard {
+
     }
 
 
